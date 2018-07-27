@@ -1,0 +1,60 @@
+﻿type Mutation {
+  createUnit(input: CreateUnitInput!): Unit!
+  deleteUnit(input: DeleteUnitInput!): Unit!
+  updateUnit(input: UpdateUnitInput!): Unit!
+}
+
+type Query {
+  fetchUnit(id: ID!): Unit
+  getUnit(id: ID!): Unit
+  listUnits(after: String, first: Int): UnitConnection
+  listUnitsWithoutState(after: String, first: Int): UnitConnection
+}
+
+type Subscription {
+  onCreateUnit(id: ID, latitude: Float, longitude: Float, title: String, unitState: UnitState): Unit
+    @aws_subscribe(mutations:["createUnit"])
+  onDeleteUnit(id: ID): Unit
+    @aws_subscribe(mutations:["deleteUnit"])
+  onUpdateUnit(id: ID, latitude: Float, longitude: Float, unitState: UnitState): Unit
+    @aws_subscribe(mutations:["updateUnit"])
+}
+
+type Unit {
+  id: ID!
+  latitude: Float
+  longitude: Float
+  title: String
+  unitState: UnitState
+}
+
+type UnitConnection {
+  items: [Unit]
+  nextToken: String
+}
+
+enum UnitState {
+  AVAILABLE
+  RESERVED
+  WORKING
+}
+
+input CreateUnitInput {
+  id: ID!
+  latitude: Float
+  longitude: Float
+  title: String
+  unitState: UnitState
+}
+
+input DeleteUnitInput {
+  id: ID!
+}
+
+input UpdateUnitInput {
+  id: ID!
+  latitude: Float
+  longitude: Float
+  title: String
+  unitState: UnitState
+}
